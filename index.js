@@ -27,7 +27,13 @@ server.use(cors())
 server.use(session(sessionConfig))
 
 server.get('/', (req, res) => {
+    req.session.name = 'Donkey Kong'
     res.send("it's working, it's working!!!")
+})
+
+server.get('/greet', (req, res) => {
+    const name = req.session.name
+    res.send(`hello ${name}`)
 })
 
 server.post('/api/register', (req, res) => {
@@ -91,6 +97,29 @@ server.get('/api/users', restricted, (req, res) => {
         .catch(error => {
             res.status(500).json(error)
         })
+})
+
+server.get('/users', async (req, res) => {
+    try {
+        const users = await Users.find()
+        res.status(200).json(users)
+    } catch(error) {
+        res.send(error)
+    }
+})
+
+server.get('/api/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy(error => {
+            if (error) {
+                res.send("you can checkout anytime you like, but you can never leave...")
+            } else {
+                res.send("Bye, you are logged out.")
+            }
+        })
+    } else {
+        res.send({ message: "uh oh"})
+    }
 })
 
 const port = process.env.PORT || 5000;
