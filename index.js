@@ -21,7 +21,7 @@ const sessionConfig = {
     resave: false,
     saveUninitialized: false, //GDPR law against setting cookies automatically
 
-    store = new KnexSessionStore({
+    store: new KnexSessionStore({
         knex: db,
         tablename: 'sessions',
         sidfieldname: 'sid',
